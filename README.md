@@ -4,22 +4,9 @@ Cilium Workshop for NDCOslo 2022
 
 ## Getting Started
 
-### Prereq
+### Pre-requisites
 
-* kubectl
-
-<details>
-  <summary>Install kubectl with asdf</summary>
-
-  ```bash
-  brew install asdf
-
-  asdf plugin add kubectl
-  asdf install kubectl v1.23.6
-  asdf global kubectl v1.23.6 latest
-  ```
-</details>
-
+* [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 * [cilium-cli](https://github.com/cilium/cilium-cli/releases)
 
 <details>
@@ -31,6 +18,18 @@ Cilium Workshop for NDCOslo 2022
   asdf plugin add cilium-cli
   asdf install cilium-cli latest
   asdf global cilium-cli latest
+  ```
+</details>
+
+<details>
+  <summary>Install kubectl with asdf</summary>
+
+  ```bash
+  brew install asdf
+
+  asdf plugin add kubectl
+  asdf install kubectl v1.23.6
+  asdf global kubectl v1.23.6 latest
   ```
 </details>
 
