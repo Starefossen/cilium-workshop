@@ -33,26 +33,54 @@ Cilium Workshop for NDCOslo 2022
   ```
 </details>
 
-### With Colima
+### With Minikube on Colima
 
-If you have not already install colima we reccomend installing it using brew:
-
-```bash
-brew install colima
-```
-
-Start colima with Kuberntes enabled:
+Install minikube, colima and docker cli.
 
 ```bash
-colima start --kubernetes
+brew install minikube colima docker-compose
 ```
 
-Run the following two commands in order to get the things up and running (sourced from cilium/cilium-cli#669 and cilium/cilium#18675):
+Compose is now a Docker plugin. For Docker to find this plugin, symlink it:
 
 ```bash
-colima ssh -- sh -c "sudo mount bpffs /sys/fs/bpf -t bpf && sudo mount --make-shared /sys/fs/bpf"
-colima ssh -- sh -c "sudo mount --make-shared /run/cilium/cgroupv2/"
+mkdir -p ~/.docker/cli-plugins
+ln -sfn /opt/homebrew/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose
 ```
+
+Start colima:
+
+```bash
+colima start --cpu 4 --memory 8
+```
+
+Check that docker is working:
+
+```bash
+docker ps
+```
+
+Configure minikube to use colima:
+
+```bash
+minikube config set driver docker
+minikube config set container-runtime docker
+```
+
+Start minikube:
+
+```bash
+minikube start \
+  -p cilium-workshop \
+  --cpus max \
+  --memory max \
+  --network-plugin=cni \
+  --cni=false \
+  --kubernetes-version v1.23.10
+```
+
+# -n 2 (2 nodes)
+# --docker-opt="default-ulimit=nofile=102400:102400"
 
 ## Install Cilium
 
@@ -62,9 +90,34 @@ Verify that you have a working Kubernetes connection:
 kubectl version
 ```
 
-Run the following command in order to set up Cilium:
-
+Run the following commands in order to set up Cilium:
 
 ```bash
 cilium install
+```
+
+Verify that Cilium is running:
+
+```bash
+cilium status
+```
+
+<details>
+  <summary>Check cilium conectivity (optional)</summary>
+
+  ```bash
+  cilium connectivity test
+  ```
+</details>
+
+Enable Cilium Hubble:
+
+```bash
+cilium hubble enable --ui
+```
+
+Open Hubble UI in your browser:
+
+```bash
+cilium hubble ui
 ```
