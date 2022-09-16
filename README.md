@@ -1,6 +1,10 @@
-# cilium-workshop
+# Workshop: Securing (and Observing) Kubernetes clusters with Cilium and eBPF
 
-Cilium Workshop for NDCOslo 2022
+Getting Kubernetes up and running and deploying your first application is
+relatively easy, managing them securely on scale however can be quite a
+challenge. Knowing what applications are communicating with each other and how
+to restrict, verify, and debug traffic policies is a real game changer for
+complex environments.
 
 ## Getting Started
 
@@ -71,7 +75,7 @@ Start minikube:
 
 ```bash
 minikube start \
-  -p cilium-workshop \
+  --profile cilium-workshop \
   --cpus max \
   --memory max \
   --network-plugin=cni \
@@ -79,8 +83,10 @@ minikube start \
   --kubernetes-version v1.23.10
 ```
 
-# -n 2 (2 nodes)
-# --docker-opt="default-ulimit=nofile=102400:102400"
+<!---
+--nnodes 2
+--docker-opt="default-ulimit=nofile=102400:102400"
+-->
 
 ## Install Cilium
 
