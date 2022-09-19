@@ -76,10 +76,8 @@ Start minikube:
 ```bash
 minikube start \
   --profile cilium-workshop \
-  --cpus max \
-  --memory max \
-  --network-plugin=cni \
-  --cni=false \
+  --cpus max --memory max \
+  --network-plugin=cni --cni=false \
   --kubernetes-version v1.23.10
 ```
 
