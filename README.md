@@ -35,21 +35,42 @@ complex environments.
   asdf install kubectl v1.23.6
   asdf global kubectl v1.23.6 latest
   ```
+
 </details>
 
-### With Minikube on Colima
+<details>
+  <summary>Install docker cli with brew</summary>
 
-Install minikube, colima and docker cli.
+  ```bash
+  brew install docker-compose
+  ```
+
+  Compose is now a Docker plugin. For Docker to find this plugin, symlink it:
+
+  ```bash
+  mkdir -p ~/.docker/cli-plugins
+  ln -sfn /opt/homebrew/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose
+  ```
+</details>
+
+### Install Kubernetes with Minikube on Colima
+
+[Minikube][minkube] is a tool that makes it easy to run Kubernetes locally.
+Minikube runs a single-node Kubernetes cluster inside a VM on your laptop for
+users looking to try out Kubernetes or develop with it day-to-day.
+
+[Colima][colima] is a tool that makes it easy to run Kubernetes locally on Apple
+Silicon Macs.
+
+[minikube]: https://minikube.sigs.k8s.io/docs/start/
+[colima]: https://github.com/abiosoft/colima
 
 ```bash
-brew install minikube colima docker-compose
-```
 
-Compose is now a Docker plugin. For Docker to find this plugin, symlink it:
+Install minikube and colima:
 
 ```bash
-mkdir -p ~/.docker/cli-plugins
-ln -sfn /opt/homebrew/opt/docker-compose/bin/docker-compose ~/.docker/cli-plugins/docker-compose
+brew install minikube colima
 ```
 
 Start colima:
@@ -78,15 +99,15 @@ minikube start \
   --profile cilium-workshop \
   --cpus max --memory max \
   --network-plugin=cni --cni=false \
-  --kubernetes-version v1.23.10
+  --kubernetes-version v1.24.6
 ```
 
 <!---
---nnodes 2
---docker-opt="default-ulimit=nofile=102400:102400"
+nnodes 2
+docker-opt="default-ulimit=nofile=102400:102400"
 -->
 
-## Install Cilium
+## Install Cilium using cilium-cli
 
 Verify that you have a working Kubernetes connection:
 
@@ -97,7 +118,10 @@ kubectl version
 Run the following commands in order to set up Cilium:
 
 ```bash
-cilium install
+cilium install \
+  --version 1.12.2 \
+  --helm-set image.pullPolicy=IfNotPresent \
+  --helm-set ipam.mode=kubernetes
 ```
 
 Verify that Cilium is running:
@@ -105,6 +129,27 @@ Verify that Cilium is running:
 ```bash
 cilium status
 ```
+
+<details>
+  <summary>cilium status output</summary>
+
+  ```bash
+      /¯¯\
+   /¯¯\__/¯¯\    Cilium:         OK
+   \__/¯¯\__/    Operator:       OK
+   /¯¯\__/¯¯\    Hubble:         disabled
+   \__/¯¯\__/    ClusterMesh:    disabled
+      \__/
+
+  Deployment        cilium-operator    Desired: 1, Ready: 1/1, Available: 1/1
+  DaemonSet         cilium             Desired: 4, Ready: 4/4, Available: 4/4
+  Containers:       cilium             Running: 4
+                    cilium-operator    Running: 1
+  Cluster Pods:     3/3 managed by Cilium
+  Image versions    cilium             quay.io/cilium/cilium:v1.12.2@sha256:986f8b04cfdb35cf714701e58e35da0ee63da2b8a048ab596ccb49de58d5ba36: 4
+                    cilium-operator    quay.io/cilium/operator-generic:v1.12.2@sha256:00508f78dae5412161fa40ee30069c2802aef20f7bdd20e91423103ba8c0df6e: 1
+  ```
+</details>
 
 <details>
   <summary>Check cilium conectivity (optional)</summary>
