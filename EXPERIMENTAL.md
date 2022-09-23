@@ -1,5 +1,80 @@
 # Experimental Configurations
 
+### With kind on Coloima
+
+[`kind`][kind] is a tool for running local Kubernetes clusters using Docker container “nodes”.
+
+[kind]: https://kind.sigs.k8s.io/
+
+Install kind and colima using brew:
+
+```bash
+brew install kind colima
+```
+
+Start colima (we reccomend at least `4 vCPU` and `8GB RAM`):
+
+```bash
+
+```bash
+colima start --cpu 4 --memory 8
+```
+
+Check that docker is working:
+
+```bash
+docker ps
+```
+
+Create a new KIND cluster:
+
+```bash
+kind create cluster --name cilium-workshop --config config/kind-config.yaml
+```
+
+<details>
+  <summary>kind create cluster output</summary>
+
+  ```bash
+  Creating cluster "cilium-workshop" ...
+   ✓ Ensuring node image (kindest/node:v1.25.2) 🖼
+   ✓ Preparing nodes 📦 📦 📦 📦
+   ✓ Writing configuration 📜
+   ✓ Starting control-plane 🕹️
+   ✓ Installing StorageClass 💾
+   ✓ Joining worker nodes 🚜
+  Set kubectl context to "kind-cilium-workshop"
+  You can now use your cluster with:
+
+  kubectl cluster-info --context kind-cilium-workshop
+
+  Have a nice day! 👋
+  ```
+</details>
+
+Set your current kubeconfig context to the new cluster:
+
+```bash
+kubectl config use-context kind-cilium-workshop
+```
+
+Check that you have a working cluster:
+
+```bash
+kubectl cluster-info
+```
+
+<details>
+  <summary>kubectl cluster-info output</summary>
+
+  ```bash
+  Kubernetes control plane is running at https://127.0.0.1:61148
+  CoreDNS is running at https://127.0.0.1:61148/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+  To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+  ```
+</details>
+
 ## Install Cilium using Helm
 
 Cilium CLI has some disadvantages, for example, it does not support all the Helm
