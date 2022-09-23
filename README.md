@@ -53,7 +53,7 @@ complex environments.
   ```
 </details>
 
-### Install Kubernetes with Minikube on Colima
+### Install Kubernetes with Minikube in Docker
 
 [Minikube][minikube] is a tool that makes it easy to run Kubernetes locally.
 Minikube runs a single-node Kubernetes cluster inside a VM on your laptop for
@@ -65,15 +65,15 @@ Silicon Macs.
 [minikube]: https://minikube.sigs.k8s.io/docs/start/
 [colima]: https://github.com/abiosoft/colima
 
-```bash
-
 Install minikube and colima:
 
 ```bash
 brew install minikube colima
 ```
 
-Start colima:
+Start colima (unless you have docker desktop running):
+
+```bash
 
 ```bash
 colima start --cpu 4 --memory 8
