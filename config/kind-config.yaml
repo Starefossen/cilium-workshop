@@ -11,5 +11,5 @@ nodes:
 #- role: worker
 #  image: kindest/node:v1.24.6@sha256:97e8d00bc37a7598a0b32d1fabd155a96355c49fa0d4d4790aab0f161bf31be1
 networking:
-  kubeProxyMode: "none"
+  # kubeProxyMode: "none"
   disableDefaultCNI: true
