@@ -1,5 +1,66 @@
 # Experimental Configurations
 
+### Kind on Lima
+
+```bash
+limactl start --name=cilium-workshop config/lima-config.yaml
+```
+
+```bash
+limactl shell cilium-workshop
+```
+
+```bash
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+```
+
+```bash
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.15.0/kind-linux-$(dpkg --print-architecture)
+chmod +x ./kind
+sudo mv ./kind /usr/local/bin/kind
+kind create cluster --name cilium-workshop --config config/kind-config.yaml
+```
+
+```bash
+curl -Lo ./kubectl https://dl.k8s.io/release/v1.24.6/bin/linux/$(dpkg --print-architecture)/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+```
+
+```bash
+mkdir ~/.kube
+sudo kind get kubeconfig --name cilium-workshop > ~/.kube/config
+```
+
+```bash
+kubectl config use-context kind-cilium-workshop
+kubectl cluster-info
+```
+
+Install Cilium
+
+```bash
+CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/master/stable.txt)
+ARCH=$(dpkg --print-architecture)
+curl -L --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-${ARCH}.tar.gz{,.sha256sum}
+sha256sum --check cilium-linux-${ARCH}.tar.gz.sha256sum
+sudo tar -C /usr/local/bin -xzvf cilium-linux-${ARCH}.tar.gz
+rm cilium-linux-${ARCH}.tar.gz{,.sha256sum}
+```
+
+```
+cilium install \
+  --version 1.12.2 \
+  --helm-set image.pullPolicy=IfNotPresent \
+  --helm-set ipam.mode=kubernetes
+```
+
 ### With kind on Coloima
 
 [`kind`][kind] is a tool for running local Kubernetes clusters using Docker container “nodes”.

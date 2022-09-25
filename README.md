@@ -74,8 +74,6 @@ brew install minikube colima
 Start colima (unless you have docker desktop running):
 
 ```bash
-
-```bash
 colima start --cpu 4 --memory 8
 ```
 
