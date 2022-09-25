@@ -24,7 +24,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.15.0/kind-linux-$(dpkg --print-architecture)
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
-kind create cluster --name cilium-workshop --config config/kind-config.yaml
+sudo kind create cluster --name cilium-workshop --config config/kind-config.yaml
 ```
 
 ```bash
@@ -54,11 +54,30 @@ sudo tar -C /usr/local/bin -xzvf cilium-linux-${ARCH}.tar.gz
 rm cilium-linux-${ARCH}.tar.gz{,.sha256sum}
 ```
 
-```
+```bash
 cilium install \
   --version 1.12.2 \
   --helm-set image.pullPolicy=IfNotPresent \
   --helm-set ipam.mode=kubernetes
+```
+
+```bash
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+```
+
+```
+helm repo add cilium https://helm.cilium.io
+helm repo update
+helm install tetragon cilium/tetragon -n kube-system
+kubectl rollout status -n kube-system ds/tetragon -w
+```
+
+```
+ARCH=$(dpkg --print-architecture)
+curl -L --remote-name-all https://github.com/cilium/tetragon/releases/download/tetragon-cli/tetragon-linux-${ARCH}.tar.gz{,.sha256sum}
+sha256sum --check tetragon-linux-${ARCH}.tar.gz.sha256sum
+sudo tar -C /usr/local/bin -xzvf tetragon-linux-${ARCH}.tar.gz
+rm tetragon-linux-${ARCH}.tar.gz{,.sha256sum}
 ```
 
 ### With kind on Coloima
